@@ -1,6 +1,6 @@
 #import j2
 #import j3
-#import j4
+#import work_with_word as www
 import j6
 import jconfig
 import os
@@ -216,7 +216,7 @@ def open_website(url):
 def write_word():
 	print("запись идёт")
 	time.sleep(6)
-	j4.check_write_func()
+	www.check_write_func()
 
 def music(voice):
 	def func_music():   
