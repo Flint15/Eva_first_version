@@ -1,7 +1,7 @@
 #import j2
 #import j3
 #import work_with_word as www
-import j6
+import weather_birth
 import jconfig
 import os
 import time
@@ -317,10 +317,10 @@ def print_time():
 def get_birth_date():
 	print("Кто ?")
 	name = recognition()
-	print(" ".join(daa.person(name)))
+	print(" ".join(weather_birth.person(name)))
 
 def weather_report():
-	daa.weather(qwerty["voice"])
+	weather_birth.weather(qwerty["voice"])
 
 def run_musiс():
 	music(qwerty["voice"]) # Check for better using
