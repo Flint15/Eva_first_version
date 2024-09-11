@@ -42,3 +42,5 @@ def record_volume():
         print(query)
         return query
 
+if __name__ == '__main__':
+    main()
