@@ -1,17 +1,18 @@
 #import j2
 #import j3
-import daa
+#import j4
+import j6
 import jconfig
 import os
 import time
-import pygame
+#import pygame
 import keyboard
 import datetime
-import pyautogui
-import webbrowser
+#import pyautogui
+#import webbrowser
 from random import randint
 from fuzzywuzzy import fuzz
-from youtubesearchpython import VideosSearch
+#from youtubesearchpython import VideosSearch
 
 voice = ""
 def recognition():
@@ -19,12 +20,11 @@ def recognition():
 		qwerty = (j2.va_listen(voice)) 
 	except:
 		qwerty = ""
-	if qwerty == "" or qwerty ==  None:
-		qwerty = input()	
+	if not qwerty:
+		qwerty = input('Please enter the input nanually: ')	
 	return qwerty
 
 def func_detect(voice):
-
 	def func_detect_com_list(voice):
 		test = {"word": "", "percent": 0, "voice": ""}
 		test["voice"] = voice
@@ -92,7 +92,7 @@ def func_detect(voice):
 		voice = voice.replace("секунд", "")
 		voice = voice.split()
 		jconfig.COMMAND_TIME[0] = voice[0]
-		jconfig.COMMAND_TIME[1] = int(voice[1])
+		jconfig.COMMAND_TIME[1] = int(voice[0])
 		jconfig.COMMAND_TIME[2] = time.time()
 
 	return qwerty
@@ -102,26 +102,23 @@ def auto_func(qwerty):
 
 		for i in jconfig.COM_LIST["reminder"]:
 			query = query.replace(i, "")
+		query = query.split()	
+		print(query, "asd", query[0], query[1])	
 		if ":" in query:
 			query = query.replace(":", "")
-		if len(query) == 3:
-			x = query[0]
-			y = str(query[1]) + str(query[2])
-		elif len(query) == 4:
-			x = str(query[0]) + str(query[1])
-			y = str(query[2]) + str(query[3])
 	
-		deadline = datetime.datetime(2022,7,28,int(x),int(y))
+		deadline = datetime.datetime(2023,10,31,int(query[0]),int(query[1]))
 		jconfig.REMINDER.append(deadline)
 		
 		return deadline
 	def call_reminder(deadline):
 		now = datetime.datetime.now()
-		
+		print(jconfig.REMINDER[1], now)
 		if jconfig.REMINDER[1] > now:
 			print(f'{jconfig.REMINDER[1]} не скоро',{now})
 		else:
 			print("deadline")
+			jconfig.REMINDER.pop(1)
 			jconfig.REMINDER[0] = "off"
 		
 		return None
@@ -154,6 +151,7 @@ def auto_func(qwerty):
 	elif qwerty == "No":
 		return
 
+# functions that run automaticly, after them created
 def auto_action(qwerty):
 	if qwerty["word"] == "reminder":
 		print("На какое время ?")
@@ -182,6 +180,9 @@ def auto_action(qwerty):
 			return "No"		
 		else:	
 			return "No"
+
+def speek_greeting():
+	j3.va_speak('Здраствуй дорогой')
 
 def run_win_r_command(mix_keys):
 	keyboard.send("win+r")
@@ -213,21 +214,9 @@ def open_website(url):
 	webbrowser.open_new(url)
 
 def write_word():
-	voice = ""
-	x = True
-	def check_write(text):
-		if "прекратить запись" in text:
-			print(text)
-			x = False
-		else:
-			x = True
-		return x	
-	while x == True:
-		print("запись продолжается")
-		qwerty = j2.va_listen(voice)
-		keyboard.write(qwerty + " ")
-		x = check_write(qwerty)
-	print("zx")
+	print("запись идёт")
+	time.sleep(6)
+	j4.check_write_func()
 
 def music(voice):
 	def func_music():   
@@ -246,7 +235,7 @@ def music(voice):
 def random():
 	print(randint(0, 1000))
 
-def close_proggarm(voice):
+def close_proggram(voice):
 	for i in jconfig.COM_LIST["close_proggram"]:
 		voice.replace(i, "")
 	voice.replace(" ", "")
@@ -281,6 +270,7 @@ def OS_command(voice):
 		keyboard.send("l")	
 
 def open_proggram_func(voice):
+
 	if "телеграм" in voice:
 		keyboard.send("win")
 		time.sleep(0.5)
@@ -305,73 +295,106 @@ def open_proggram_func(voice):
 		keyboard.write("steam")	
 		time.sleep(0.5)
 		keyboard.send("enter")
+	if "ворд" in voice:
+		keyboard.send("win")
+		time.sleep(0.5)
+		keyboard.write("word")	
+		time.sleep(0.5)
+		keyboard.send("enter")
+
+def open_file():
+	try:	
+		os.startfile("zxc.txt")
+	except:
+		print('File is not find')
+
+def open_browser():
+	webbrowser.open('opera')
+
+def print_time():
+	print(datetime.datetime.now())
+
+def get_birth_date():
+	print("Кто ?")
+	name = recognition()
+	print(" ".join(daa.person(name)))
+
+def weather_report():
+	daa.weather(qwerty["voice"])
+
+def run_musiс():
+	music(qwerty["voice"]) # Check for better using
+
+def run_OS_command():
+	OS_command(qwerty["voice"])
+
+def run_close_proggram():
+	close_proggram(qwerty["voice"])
+
+def change_language():
+	keyboard.send("shift+alt")
+
+def run_open_proggram_func():
+	open_proggram_func(qwerty["voice"])
+
+def complite():
+	jconfig.COMMAND_TIME = [0, 0, 0, 0]
 
 def action(qwerty):
-	if qwerty["word"] == "say":
-		j3.va_speak("Здраствуйте сэр")
-	if qwerty["word"] == "open_file":
-		os.system("zx.txt")
-	if qwerty["word"] == "open_browser":
-		webbrowser.open("opera")
-	if qwerty["word"] == "time":
-		print(datetime.datetime.now())
-	if qwerty["word"] == "date_bith":
-		print("Кто ?")
-		name = recognition()
-		print(" ".join(daa.person(name)))
-	if qwerty["word"] == "open_youtube":
-		func_video(qwerty["voice"])
-	if qwerty["word"] in jconfig.COMMAND and jconfig.COMMAND[2] == "win_r_command":
-		print(qwerty["word"])
+	word = qwerty.get('word', '')
+
+	if word in jconfig.COMMAND and jconfig.COMMAND[2] == "win_r_command":
+		print(word)
 		run_win_r_command(qwerty)
-	if qwerty["word"] == "open_website":
-		open_website(qwerty["url"])
+	
 	if jconfig.COMMAND[2] == "word":
+		print("asd")
 		query = ""
 		for i in jconfig.COM_LIST["word"]:
 			query = qwerty["voice"].replace(i, "")
 		print(query)	
 		qwerty = func_detect(query)
 		run_word_command(jconfig.COMMAND[0])
-	if qwerty["word"] == "write_word":
-		print("запись идёт")
-		time.sleep(6)
-		write_word()
-	if qwerty["word"] == "weather":
-		daa.weather(qwerty["voice"])
-	if qwerty["word"] == "music":
-		music(qwerty["voice"])
-	if qwerty["word"] == "OS_command":
-		OS_command(qwerty["voice"])
-	if qwerty["word"] == "random" or jconfig.COMMAND_TIME[3] == "рандом":
+	
+	if word == "random" or jconfig.COMMAND_TIME[3] == "рандом":
 		random()
-	if qwerty["word"] == "close_proggram":
-		close_proggarm(qwerty["voice"])
-	if qwerty["word"] == "change_language":
-		keyboard.send("shift+alt")
-	if qwerty["word"] == "open_proggram":
-		open_proggram_func(qwerty["voice"])
 
-	if qwerty["voice"] == "complite":
-		jconfig.COMMAND_TIME = [0, 0, 0, 0]
+	command_map = {
+		'say': speek_greeting,
+		'open_file': open_file,
+		'open_browser': open_browser,
+		'time': print_time,
+		'date_birth': get_birth_date,
+		'open_youtube': func_video,
+		'open_website': open_website,
+		'write_word': write_word,
+		'weather': weather_report,
+		'OS_command': run_OS_command, 
+		'close_proggram': run_close_proggram,
+		'change_language': change_language,
+		'open_proggram': run_open_proggram_func,
+		'complite': complite
+	}
+	print(qwerty, word)
+	if word in command_map:
+		command_map[word]()
+		print(command_map[word]())
 
 	return None
-# Проверку можно сделать с помощью for где i будет каждая комманда/ключ из COM_LIST
-# Так можно будет оптимизировать проверку
 
 def va_respond(voice: str):
 
-    print(voice)
-    voice.replace(jconfig.NAME, "")
-    qwerty = func_detect(voice)
-    auto_func(auto_action(qwerty))
-    action(qwerty)
-    return
+	voice.replace(jconfig.NAME, "")
+	print(voice)
+	qwerty = func_detect(voice)
+	auto_func(auto_action(qwerty))
+	action(qwerty)
+	
+	return
 
 while True:
-
 	qwerty = recognition()
-	if qwerty == "":
+	if not qwerty:
 		pass
 	else:
 		va_respond(qwerty)
