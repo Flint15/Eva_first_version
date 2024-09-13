@@ -1,5 +1,5 @@
-#import j2
-#import j3
+#import voice_input
+#import voice_output
 #import work_with_word as www
 import weather_birth
 import jconfig
