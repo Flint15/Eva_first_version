@@ -56,6 +56,5 @@ def weather(voice):
 				if "tomorrow" in i.get("href"):
 					i = i.find("span", class_="unit unit_temperature_c").text.split()
 					print(i[0])
-
-
-
+if __name__ == '__main__':
+    main()
