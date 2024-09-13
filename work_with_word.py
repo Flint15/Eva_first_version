@@ -105,3 +105,6 @@ def check_write_func():
 			except:
 				pass
 		print(jconfig.WORD_MEMORY)
+
+if __name__ == '__main__':
+    main()
