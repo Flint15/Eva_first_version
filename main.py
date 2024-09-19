@@ -312,7 +312,8 @@ def open_browser():
 	webbrowser.open('opera')
 
 def print_time():
-	print(datetime.datetime.now())
+	local_time = time.strftime("%H:%M:%S")
+	print(local_time)
 
 def get_birth_date():
 	print("Кто ?")
